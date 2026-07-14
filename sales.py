@@ -1,4 +1,3 @@
-
 import customtkinter as ctk
 from tkinter import messagebox, ttk
 
@@ -17,8 +16,8 @@ class SalesWindow(ctk.CTkToplevel):
         self.sale_items = []
 
         self.title("New Stamp Sale")
-        self.geometry("1200x780")
-        self.minsize(1050, 680)
+        self.geometry("1250x800")
+        self.minsize(1100, 700)
 
         self.transient(parent)
         self.lift()
@@ -36,7 +35,6 @@ class SalesWindow(ctk.CTkToplevel):
     def create_ui(self):
         self.configure(fg_color="#F1F5F9")
 
-        # HEADER
         header = ctk.CTkFrame(
             self,
             height=70,
@@ -62,7 +60,6 @@ class SalesWindow(ctk.CTkToplevel):
             hover_color="#B91C1C"
         ).pack(side="right", padx=25)
 
-        # MAIN
         main = ctk.CTkScrollableFrame(
             self,
             fg_color="transparent"
@@ -83,10 +80,7 @@ class SalesWindow(ctk.CTkToplevel):
             fg_color="white",
             corner_radius=12
         )
-        customer_frame.pack(
-            fill="x",
-            pady=(0, 15)
-        )
+        customer_frame.pack(fill="x", pady=(0, 15))
 
         ctk.CTkLabel(
             customer_frame,
@@ -95,17 +89,14 @@ class SalesWindow(ctk.CTkToplevel):
         ).grid(
             row=0,
             column=0,
-            columnspan=3,
+            columnspan=2,
             sticky="w",
             padx=20,
             pady=(18, 12)
         )
 
-        for column in range(3):
-            customer_frame.grid_columnconfigure(
-                column,
-                weight=1
-            )
+        customer_frame.grid_columnconfigure(0, weight=1)
+        customer_frame.grid_columnconfigure(1, weight=1)
 
         ctk.CTkLabel(
             customer_frame,
@@ -125,16 +116,6 @@ class SalesWindow(ctk.CTkToplevel):
             column=1,
             sticky="w",
             padx=10
-        )
-
-        ctk.CTkLabel(
-            customer_frame,
-            text="Serial Number"
-        ).grid(
-            row=1,
-            column=2,
-            sticky="w",
-            padx=20
         )
 
         self.customer_name_entry = ctk.CTkEntry(
@@ -159,19 +140,6 @@ class SalesWindow(ctk.CTkToplevel):
             row=2,
             column=1,
             sticky="ew",
-            padx=10,
-            pady=(5, 20)
-        )
-
-        self.serial_entry = ctk.CTkEntry(
-            customer_frame,
-            height=40,
-            placeholder_text="Example: কব 3595820"
-        )
-        self.serial_entry.grid(
-            row=2,
-            column=2,
-            sticky="ew",
             padx=(10, 20),
             pady=(5, 20)
         )
@@ -185,10 +153,7 @@ class SalesWindow(ctk.CTkToplevel):
             fg_color="white",
             corner_radius=12
         )
-        item_frame.pack(
-            fill="x",
-            pady=(0, 15)
-        )
+        item_frame.pack(fill="x", pady=(0, 15))
 
         ctk.CTkLabel(
             item_frame,
@@ -197,25 +162,23 @@ class SalesWindow(ctk.CTkToplevel):
         ).grid(
             row=0,
             column=0,
-            columnspan=6,
+            columnspan=7,
             sticky="w",
             padx=20,
             pady=(18, 12)
         )
 
-        for column in range(5):
-            item_frame.grid_columnconfigure(
-                column,
-                weight=1
-            )
+        for column in range(7):
+            item_frame.grid_columnconfigure(column, weight=1)
 
-        # LABELS
         labels = [
             "Category",
-            "Available Stock",
+            "Serial Number",
+            "Available",
             "Quantity",
+            "Stamp Price",
             "Profit Per Stamp",
-            "Calculated Profit"
+            "Total Profit"
         ]
 
         for column, text in enumerate(labels):
@@ -226,10 +189,9 @@ class SalesWindow(ctk.CTkToplevel):
                 row=1,
                 column=column,
                 sticky="w",
-                padx=10
+                padx=8
             )
 
-        # CATEGORY
         self.category_combo = ctk.CTkComboBox(
             item_frame,
             values=["No Category"],
@@ -241,30 +203,38 @@ class SalesWindow(ctk.CTkToplevel):
             row=2,
             column=0,
             sticky="ew",
-            padx=(20, 10),
-            pady=(5, 20)
+            padx=(20, 6),
+            pady=(5, 15)
         )
 
-        # STOCK
+        self.serial_entry = ctk.CTkEntry(
+            item_frame,
+            height=40,
+            placeholder_text="Serial number"
+        )
+        self.serial_entry.grid(
+            row=2,
+            column=1,
+            sticky="ew",
+            padx=6,
+            pady=(5, 15)
+        )
+
         self.stock_label = ctk.CTkLabel(
             item_frame,
             text="0",
             height=40,
-            font=ctk.CTkFont(
-                size=18,
-                weight="bold"
-            ),
+            font=ctk.CTkFont(size=18, weight="bold"),
             text_color="#2563EB"
         )
         self.stock_label.grid(
             row=2,
-            column=1,
+            column=2,
             sticky="ew",
-            padx=10,
-            pady=(5, 20)
+            padx=6,
+            pady=(5, 15)
         )
 
-        # QUANTITY
         self.quantity_entry = ctk.CTkEntry(
             item_frame,
             height=40,
@@ -272,13 +242,27 @@ class SalesWindow(ctk.CTkToplevel):
         )
         self.quantity_entry.grid(
             row=2,
-            column=2,
+            column=3,
             sticky="ew",
-            padx=10,
-            pady=(5, 20)
+            padx=6,
+            pady=(5, 15)
         )
 
-        # PROFIT PER STAMP
+        self.stamp_price_label = ctk.CTkLabel(
+            item_frame,
+            text="৳ 0.00",
+            height=40,
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#2563EB"
+        )
+        self.stamp_price_label.grid(
+            row=2,
+            column=4,
+            sticky="ew",
+            padx=6,
+            pady=(5, 15)
+        )
+
         self.profit_entry = ctk.CTkEntry(
             item_frame,
             height=40,
@@ -286,56 +270,52 @@ class SalesWindow(ctk.CTkToplevel):
         )
         self.profit_entry.grid(
             row=2,
-            column=3,
+            column=5,
             sticky="ew",
-            padx=10,
-            pady=(5, 20)
+            padx=6,
+            pady=(5, 15)
         )
 
-        # CALCULATED PROFIT
         self.calculated_profit_label = ctk.CTkLabel(
             item_frame,
             text="৳ 0.00",
             height=40,
-            font=ctk.CTkFont(
-                size=17,
-                weight="bold"
-            ),
+            font=ctk.CTkFont(size=16, weight="bold"),
             text_color="#059669"
         )
         self.calculated_profit_label.grid(
             row=2,
-            column=4,
+            column=6,
             sticky="ew",
-            padx=10,
-            pady=(5, 20)
+            padx=(6, 20),
+            pady=(5, 15)
         )
 
-        # ADD BUTTON
         ctk.CTkButton(
             item_frame,
-            text="Add Item",
-            width=120,
-            height=40,
+            text="ADD ITEM",
+            height=42,
             command=self.add_item,
             fg_color="#2563EB",
-            hover_color="#1D4ED8"
+            hover_color="#1D4ED8",
+            font=ctk.CTkFont(size=14, weight="bold")
         ).grid(
-            row=2,
-            column=5,
-            padx=(10, 20),
-            pady=(5, 20)
+            row=3,
+            column=0,
+            columnspan=7,
+            sticky="ew",
+            padx=20,
+            pady=(0, 20)
         )
 
-        # LIVE CALCULATION
         self.quantity_entry.bind(
             "<KeyRelease>",
-            self.calculate_profit_preview
+            self.calculate_preview
         )
 
         self.profit_entry.bind(
             "<KeyRelease>",
-            self.calculate_profit_preview
+            self.calculate_preview
         )
 
         # =====================================================
@@ -366,10 +346,7 @@ class SalesWindow(ctk.CTkToplevel):
         ctk.CTkLabel(
             table_header,
             text="Sale Items",
-            font=ctk.CTkFont(
-                size=20,
-                weight="bold"
-            )
+            font=ctk.CTkFont(size=20, weight="bold")
         ).pack(side="left")
 
         ctk.CTkButton(
@@ -383,9 +360,12 @@ class SalesWindow(ctk.CTkToplevel):
 
         columns = (
             "category",
+            "serial",
             "quantity",
-            "profit_per_stamp",
-            "total_profit"
+            "stamp_price",
+            "profit_each",
+            "total_profit",
+            "grand_total"
         )
 
         self.items_tree = ttk.Treeview(
@@ -395,48 +375,39 @@ class SalesWindow(ctk.CTkToplevel):
             height=8
         )
 
-        self.items_tree.heading(
-            "category",
-            text="Stamp Category"
-        )
+        headings = {
+            "category": "Category",
+            "serial": "Serial Number",
+            "quantity": "Quantity",
+            "stamp_price": "Stamp Price",
+            "profit_each": "Profit Per Stamp",
+            "total_profit": "Total Profit",
+            "grand_total": "Grand Total"
+        }
 
-        self.items_tree.heading(
-            "quantity",
-            text="Quantity"
-        )
-
-        self.items_tree.heading(
-            "profit_per_stamp",
-            text="Profit Per Stamp"
-        )
-
-        self.items_tree.heading(
-            "total_profit",
-            text="Total Profit"
-        )
+        for column, text in headings.items():
+            self.items_tree.heading(column, text=text)
 
         self.items_tree.column(
-            "category",
-            anchor="center",
-            width=250
+            "category", anchor="center", width=120
         )
-
         self.items_tree.column(
-            "quantity",
-            anchor="center",
-            width=150
+            "serial", anchor="center", width=180
         )
-
         self.items_tree.column(
-            "profit_per_stamp",
-            anchor="center",
-            width=180
+            "quantity", anchor="center", width=90
         )
-
         self.items_tree.column(
-            "total_profit",
-            anchor="center",
-            width=180
+            "stamp_price", anchor="center", width=120
+        )
+        self.items_tree.column(
+            "profit_each", anchor="center", width=130
+        )
+        self.items_tree.column(
+            "total_profit", anchor="center", width=120
+        )
+        self.items_tree.column(
+            "grand_total", anchor="center", width=120
         )
 
         self.items_tree.pack(
@@ -447,7 +418,7 @@ class SalesWindow(ctk.CTkToplevel):
         )
 
         # =====================================================
-        # TOTAL / SAVE
+        # TOTAL
         # =====================================================
 
         bottom_frame = ctk.CTkFrame(
@@ -455,38 +426,50 @@ class SalesWindow(ctk.CTkToplevel):
             fg_color="white",
             corner_radius=12
         )
-        bottom_frame.pack(
-            fill="x",
-            pady=(0, 20)
-        )
+        bottom_frame.pack(fill="x", pady=(0, 20))
 
         self.total_quantity_label = ctk.CTkLabel(
             bottom_frame,
             text="Total Quantity: 0",
-            font=ctk.CTkFont(
-                size=17,
-                weight="bold"
-            )
+            font=ctk.CTkFont(size=16, weight="bold")
         )
         self.total_quantity_label.pack(
             side="left",
-            padx=25,
+            padx=20,
             pady=20
+        )
+
+        self.total_stamp_price_label = ctk.CTkLabel(
+            bottom_frame,
+            text="Stamp Price: ৳ 0.00",
+            font=ctk.CTkFont(size=16, weight="bold"),
+            text_color="#2563EB"
+        )
+        self.total_stamp_price_label.pack(
+            side="left",
+            padx=15
         )
 
         self.total_profit_label = ctk.CTkLabel(
             bottom_frame,
-            text="Total Profit: ৳ 0.00",
-            font=ctk.CTkFont(
-                size=18,
-                weight="bold"
-            ),
+            text="Profit: ৳ 0.00",
+            font=ctk.CTkFont(size=16, weight="bold"),
             text_color="#059669"
         )
         self.total_profit_label.pack(
             side="left",
-            padx=25,
-            pady=20
+            padx=15
+        )
+
+        self.grand_total_label = ctk.CTkLabel(
+            bottom_frame,
+            text="Grand Total: ৳ 0.00",
+            font=ctk.CTkFont(size=18, weight="bold"),
+            text_color="#7C3AED"
+        )
+        self.grand_total_label.pack(
+            side="left",
+            padx=15
         )
 
         ctk.CTkButton(
@@ -497,10 +480,7 @@ class SalesWindow(ctk.CTkToplevel):
             command=self.save_sale,
             fg_color="#059669",
             hover_color="#047857",
-            font=ctk.CTkFont(
-                size=15,
-                weight="bold"
-            )
+            font=ctk.CTkFont(size=15, weight="bold")
         ).pack(
             side="right",
             padx=25,
@@ -508,49 +488,32 @@ class SalesWindow(ctk.CTkToplevel):
         )
 
     # =====================================================
-    # LOAD CATEGORIES
+    # CATEGORY
     # =====================================================
 
     def load_categories(self):
         try:
-            self.categories = get_categories(
-                active_only=True
-            )
-
+            self.categories = get_categories(active_only=True)
             self.category_map = {}
 
             names = []
 
             for category in self.categories:
                 name = str(category["name"])
-
                 names.append(name)
-
                 self.category_map[name] = category
 
             if names:
-                self.category_combo.configure(
-                    values=names
-                )
-
-                self.category_combo.set(
-                    names[0]
-                )
-
+                self.category_combo.configure(values=names)
+                self.category_combo.set(names[0])
                 self.update_stock_label()
-
+                self.calculate_preview()
             else:
                 self.category_combo.configure(
                     values=["No Category"]
                 )
-
-                self.category_combo.set(
-                    "No Category"
-                )
-
-                self.stock_label.configure(
-                    text="0"
-                )
+                self.category_combo.set("No Category")
+                self.stock_label.configure(text="0")
 
         except Exception as error:
             messagebox.showerror(
@@ -559,15 +522,9 @@ class SalesWindow(ctk.CTkToplevel):
                 parent=self
             )
 
-    # =====================================================
-    # CATEGORY CHANGE
-    # =====================================================
-
-    def category_changed(
-        self,
-        selected_value
-    ):
+    def category_changed(self, selected_value=None):
         self.update_stock_label()
+        self.calculate_preview()
 
     def update_stock_label(self):
         category = self.category_map.get(
@@ -576,48 +533,55 @@ class SalesWindow(ctk.CTkToplevel):
 
         if category:
             self.stock_label.configure(
-                text=str(
-                    category["current_stock"]
-                )
+                text=str(category["current_stock"])
             )
         else:
-            self.stock_label.configure(
-                text="0"
-            )
+            self.stock_label.configure(text="0")
 
     # =====================================================
-    # LIVE PROFIT CALCULATION
+    # PRICE CALCULATION
     # =====================================================
 
-    def calculate_profit_preview(
-        self,
-        event=None
-    ):
-        quantity_text = (
-            self.quantity_entry.get().strip()
-        )
-
-        profit_text = (
-            self.profit_entry.get().strip()
-        )
+    def get_category_unit_price(self, category):
+        if not category:
+            return 0.0
 
         try:
-            quantity = int(quantity_text)
-            profit_per_stamp = float(profit_text)
+            return float(str(category["name"]).strip())
+        except (ValueError, TypeError):
+            return 0.0
 
+    def calculate_preview(self, event=None):
+        category = self.category_map.get(
+            self.category_combo.get()
+        )
+
+        unit_price = self.get_category_unit_price(category)
+
+        try:
+            quantity = int(
+                self.quantity_entry.get().strip()
+            )
             if quantity < 0:
                 quantity = 0
-
-            if profit_per_stamp < 0:
-                profit_per_stamp = 0
-
-            total_profit = (
-                quantity *
-                profit_per_stamp
-            )
-
         except ValueError:
-            total_profit = 0.0
+            quantity = 0
+
+        try:
+            profit_per_stamp = float(
+                self.profit_entry.get().strip()
+            )
+            if profit_per_stamp < 0:
+                profit_per_stamp = 0.0
+        except ValueError:
+            profit_per_stamp = 0.0
+
+        stamp_price = unit_price * quantity
+        total_profit = profit_per_stamp * quantity
+
+        self.stamp_price_label.configure(
+            text=f"৳ {stamp_price:,.2f}"
+        )
 
         self.calculated_profit_label.configure(
             text=f"৳ {total_profit:,.2f}"
@@ -628,13 +592,8 @@ class SalesWindow(ctk.CTkToplevel):
     # =====================================================
 
     def add_item(self):
-        category_name = (
-            self.category_combo.get()
-        )
-
-        category = self.category_map.get(
-            category_name
-        )
+        category_name = self.category_combo.get()
+        category = self.category_map.get(category_name)
 
         if not category:
             messagebox.showwarning(
@@ -644,18 +603,19 @@ class SalesWindow(ctk.CTkToplevel):
             )
             return
 
-        quantity_text = (
-            self.quantity_entry.get().strip()
-        )
+        serial_number = self.serial_entry.get().strip()
 
-        profit_text = (
-            self.profit_entry.get().strip()
-        )
+        if not serial_number:
+            messagebox.showwarning(
+                "Serial Number",
+                "Please enter a serial number for this category.",
+                parent=self
+            )
+            return
 
-        # QUANTITY VALIDATION
         try:
             quantity = int(
-                quantity_text
+                self.quantity_entry.get().strip()
             )
 
             if quantity <= 0:
@@ -669,10 +629,9 @@ class SalesWindow(ctk.CTkToplevel):
             )
             return
 
-        # PROFIT PER STAMP VALIDATION
         try:
             profit_per_stamp = float(
-                profit_text
+                self.profit_entry.get().strip()
             )
 
             if profit_per_stamp < 0:
@@ -686,176 +645,115 @@ class SalesWindow(ctk.CTkToplevel):
             )
             return
 
-        # CALCULATE TOTAL PROFIT
-        total_item_profit = (
-            quantity *
-            profit_per_stamp
-        )
-
         available_stock = int(
             category["current_stock"]
         )
 
         already_added = sum(
-            item["quantity"]
+            int(item["quantity"])
             for item in self.sale_items
-            if item["category_id"]
-            == category["id"]
+            if int(item["category_id"]) == int(category["id"])
         )
 
-        if (
-            already_added +
-            quantity >
-            available_stock
-        ):
+        if already_added + quantity > available_stock:
             messagebox.showwarning(
                 "Not Enough Stock",
                 (
-                    f"Available stock: "
-                    f"{available_stock}\n"
-                    f"Already added: "
-                    f"{already_added}\n"
-                    f"New quantity: "
-                    f"{quantity}"
+                    f"Available stock: {available_stock}\n"
+                    f"Already added: {already_added}\n"
+                    f"New quantity: {quantity}"
                 ),
                 parent=self
             )
             return
 
-        # SAME CATEGORY EXISTS
-        existing_item = None
+        unit_price = self.get_category_unit_price(category)
+        stamp_price = unit_price * quantity
 
-        for item in self.sale_items:
-            if (
-                item["category_id"]
-                == category["id"]
-            ):
-                existing_item = item
-                break
+        # IMPORTANT:
+        # Profit entered is PROFIT PER STAMP.
+        total_item_profit = profit_per_stamp * quantity
 
-        if existing_item:
-            # Combine quantity and total profit
-            existing_item["quantity"] += (
-                quantity
-            )
+        grand_total = stamp_price + total_item_profit
 
-            existing_item["profit"] += (
-                total_item_profit
-            )
+        self.sale_items.append({
+            "category_id": int(category["id"]),
+            "category_name": str(category["name"]),
+            "serial_number": serial_number,
+            "quantity": quantity,
+            "unit_price": unit_price,
+            "stamp_price": stamp_price,
+            "profit_per_stamp": profit_per_stamp,
+            "profit": total_item_profit,
+            "grand_total": grand_total
+        })
 
-            # Average profit per stamp for display
-            if existing_item["quantity"] > 0:
-                existing_item[
-                    "profit_per_stamp"
-                ] = (
-                    existing_item["profit"] /
-                    existing_item["quantity"]
-                )
+        self.serial_entry.delete(0, "end")
+        self.quantity_entry.delete(0, "end")
+        self.profit_entry.delete(0, "end")
 
-        else:
-            self.sale_items.append({
-                "category_id":
-                    category["id"],
-
-                "category_name":
-                    category["name"],
-
-                "quantity":
-                    quantity,
-
-                "profit_per_stamp":
-                    profit_per_stamp,
-
-                # database receives total profit
-                "profit":
-                    total_item_profit
-            })
-
-        self.quantity_entry.delete(
-            0,
-            "end"
+        self.stamp_price_label.configure(
+            text="৳ 0.00"
         )
-
-        self.profit_entry.delete(
-            0,
-            "end"
-        )
-
         self.calculated_profit_label.configure(
             text="৳ 0.00"
         )
 
         self.refresh_items_table()
+        self.serial_entry.focus()
 
     # =====================================================
-    # REFRESH ITEMS TABLE
+    # TABLE
     # =====================================================
 
     def refresh_items_table(self):
-        for row in (
-            self.items_tree.get_children()
-        ):
-            self.items_tree.delete(
-                row
-            )
+        for row in self.items_tree.get_children():
+            self.items_tree.delete(row)
 
         total_quantity = 0
+        total_stamp_price = 0.0
         total_profit = 0.0
+        grand_total = 0.0
 
-        for index, item in enumerate(
-            self.sale_items
-        ):
+        for index, item in enumerate(self.sale_items):
             self.items_tree.insert(
                 "",
                 "end",
                 iid=str(index),
                 values=(
                     item["category_name"],
-
+                    item["serial_number"],
                     item["quantity"],
-
-                    (
-                        f"৳ "
-                        f"{item['profit_per_stamp']:,.2f}"
-                    ),
-
-                    (
-                        f"৳ "
-                        f"{item['profit']:,.2f}"
-                    )
+                    f"৳ {item['stamp_price']:,.2f}",
+                    f"৳ {item['profit_per_stamp']:,.2f}",
+                    f"৳ {item['profit']:,.2f}",
+                    f"৳ {item['grand_total']:,.2f}"
                 )
             )
 
-            total_quantity += (
-                item["quantity"]
-            )
-
-            total_profit += (
-                item["profit"]
-            )
+            total_quantity += item["quantity"]
+            total_stamp_price += item["stamp_price"]
+            total_profit += item["profit"]
+            grand_total += item["grand_total"]
 
         self.total_quantity_label.configure(
-            text=(
-                f"Total Quantity: "
-                f"{total_quantity}"
-            )
+            text=f"Total Quantity: {total_quantity}"
+        )
+
+        self.total_stamp_price_label.configure(
+            text=f"Stamp Price: ৳ {total_stamp_price:,.2f}"
         )
 
         self.total_profit_label.configure(
-            text=(
-                f"Total Profit: "
-                f"৳ {total_profit:,.2f}"
-            )
+            text=f"Profit: ৳ {total_profit:,.2f}"
         )
 
-    # =====================================================
-    # REMOVE ITEM
-    # =====================================================
+        self.grand_total_label.configure(
+            text=f"Grand Total: ৳ {grand_total:,.2f}"
+        )
 
     def remove_selected_item(self):
-        selected = (
-            self.items_tree.selection()
-        )
+        selected = self.items_tree.selection()
 
         if not selected:
             messagebox.showwarning(
@@ -865,18 +763,10 @@ class SalesWindow(ctk.CTkToplevel):
             )
             return
 
-        index = int(
-            selected[0]
-        )
+        index = int(selected[0])
 
-        if (
-            0 <= index <
-            len(self.sale_items)
-        ):
-            self.sale_items.pop(
-                index
-            )
-
+        if 0 <= index < len(self.sale_items):
+            self.sale_items.pop(index)
             self.refresh_items_table()
 
     # =====================================================
@@ -885,35 +775,17 @@ class SalesWindow(ctk.CTkToplevel):
 
     def save_sale(self):
         customer_name = (
-            self.customer_name_entry
-            .get()
-            .strip()
+            self.customer_name_entry.get().strip()
         )
 
         customer_address = (
-            self.address_entry
-            .get()
-            .strip()
-        )
-
-        serial_number = (
-            self.serial_entry
-            .get()
-            .strip()
+            self.address_entry.get().strip()
         )
 
         if not customer_name:
             messagebox.showwarning(
                 "Customer Name",
                 "Please enter customer name.",
-                parent=self
-            )
-            return
-
-        if not serial_number:
-            messagebox.showwarning(
-                "Serial Number",
-                "Please enter serial number.",
                 parent=self
             )
             return
@@ -931,26 +803,29 @@ class SalesWindow(ctk.CTkToplevel):
             for item in self.sale_items
         )
 
+        total_stamp_price = sum(
+            item["stamp_price"]
+            for item in self.sale_items
+        )
+
         total_profit = sum(
             item["profit"]
             for item in self.sale_items
         )
 
+        grand_total = (
+            total_stamp_price +
+            total_profit
+        )
+
         confirm = messagebox.askyesno(
             "Confirm Sale",
             (
-                f"Customer: "
-                f"{customer_name}\n"
-
-                f"Serial: "
-                f"{serial_number}\n"
-
-                f"Total Quantity: "
-                f"{total_quantity}\n"
-
-                f"Total Profit: "
-                f"৳ {total_profit:,.2f}\n\n"
-
+                f"Customer: {customer_name}\n"
+                f"Total Quantity: {total_quantity}\n"
+                f"Stamp Price: ৳ {total_stamp_price:,.2f}\n"
+                f"Total Profit: ৳ {total_profit:,.2f}\n"
+                f"Grand Total: ৳ {grand_total:,.2f}\n\n"
                 "Do you want to save this sale?"
             ),
             parent=self
@@ -962,7 +837,6 @@ class SalesWindow(ctk.CTkToplevel):
         success, message = create_sale(
             customer_name,
             customer_address,
-            serial_number,
             self.sale_items
         )
 
@@ -974,7 +848,6 @@ class SalesWindow(ctk.CTkToplevel):
             )
 
             self.clear_form()
-
             self.load_categories()
 
             if self.refresh_callback:
@@ -987,53 +860,28 @@ class SalesWindow(ctk.CTkToplevel):
                 parent=self
             )
 
-    # =====================================================
-    # CLEAR FORM
-    # =====================================================
-
     def clear_form(self):
-        self.customer_name_entry.delete(
-            0,
-            "end"
-        )
-
-        self.address_entry.delete(
-            0,
-            "end"
-        )
-
-        self.serial_entry.delete(
-            0,
-            "end"
-        )
-
-        self.quantity_entry.delete(
-            0,
-            "end"
-        )
-
-        self.profit_entry.delete(
-            0,
-            "end"
-        )
+        self.customer_name_entry.delete(0, "end")
+        self.address_entry.delete(0, "end")
+        self.serial_entry.delete(0, "end")
+        self.quantity_entry.delete(0, "end")
+        self.profit_entry.delete(0, "end")
 
         self.sale_items.clear()
+
+        self.stamp_price_label.configure(
+            text="৳ 0.00"
+        )
 
         self.calculated_profit_label.configure(
             text="৳ 0.00"
         )
 
         self.refresh_items_table()
-
         self.customer_name_entry.focus()
-
-    # =====================================================
-    # CLOSE
-    # =====================================================
 
     def close_window(self):
         if self.refresh_callback:
             self.refresh_callback()
 
         self.destroy()
-
